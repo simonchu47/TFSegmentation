@@ -7,10 +7,15 @@ import scipy.misc
 def main(main_path, split, out_path):
 
     path_file= open(out_path, 'w')
-    img_dir= main_path+'/images/'
-    short_img_dir= 'images/'
-    mask_dir= main_path+'/mask/'
-    short_mask_dir= 'mask/'
+    #img_dir= main_path+'/images/'
+    img_dir= main_path+'/CameraRGB/'
+    #short_img_dir= 'images/'
+    short_img_dir= 'CameraRGB'
+
+    #mask_dir= main_path+'/mask/'
+    mask_dir= main_path+'/CameraSegRemap/'
+    #short_mask_dir= 'mask/'
+    short_mask_dir= 'CameraSegRemap'
 
     imgs_files= sorted(os.listdir(img_dir))
     labels_files= sorted(os.listdir(mask_dir))
