@@ -27,7 +27,7 @@ import scipy.misc
 #    path_file.close()
 #main(sys.argv[1], sys.argv[2], sys.argv[3])
 
-
+"""
 labelID_2_trainID = {0: 19,  # 'unlabeled'
                      1: 19,  # 'ego vehicle'
                      2: 19,  # 'rectification border'
@@ -64,7 +64,24 @@ labelID_2_trainID = {0: 19,  # 'unlabeled'
                      33: 18,  # 'bicycle'
                      -1: 19,  # 'license plate'
                      }
-
+"""
+labelID_2_trainID = {0: 0,  # 'unlabeled'
+                     1: 0,  # 'ego vehicle'
+                     2: 0,  # 'rectification border'
+                     3: 0,  # 'out of roi'
+                     4: 0,  # 'static'
+                     5: 0,  # 'dynamic'
+                     6: 1,  # 'ground'
+                     7: 1,  # 'road'
+                     8: 0,  # 'sidewalk'
+                     9: 0,  # 'parking'
+                     10: 2,  # 'rail track'
+                     11: 0,  # 'building'
+                     12: 0,  # 'wall'
+                     13: 0,  # 'fence'
+                     14: 0,
+                     15: 0,
+                     } 
 
 def custom_ignore_labels(img):
     img_temp = np.zeros(img.shape, dtype=np.uint8)
@@ -79,7 +96,7 @@ def save_labels(main_dir, paths_file):
         tokens= line.strip().split(' ')
         img= scipy.misc.imread(main_dir+tokens[1])
         iimg= custom_ignore_labels(img)
-        tokens[1]= tokens[1].replace('labelIds', 'labelIds_proc')
+        #tokens[1]= tokens[1].replace('labelIds', 'labelIds_proc')
         scipy.misc.imsave(main_dir+tokens[1], iimg)
 
 save_labels(sys.argv[1], sys.argv[2])
