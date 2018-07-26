@@ -50,22 +50,29 @@ def write_image_annotation_pairs(filename_pairs, path, split):
     labels= []
     for img_path, annotation_path in tqdm(filename_pairs):
         img = misc.imread(img_path)
-        img = misc.imresize(img, SIZE)
+        #img = misc.imresize(img, SIZE)
         imgs.append(img)
         annotation = misc.imread(annotation_path)
-        annotation[annotation<=128]=0
-        annotation[annotation>128]=1
-        annotation = misc.imresize(annotation, SIZE, 'nearest')
-        labels.append(annotation)
+        #annotation[annotation<=128]=0
+        #annotation[annotation>128]=1
+        #annotation = misc.imresize(annotation, SIZE, 'nearest')
+        labels.append(annotation[:, :, 0])
 
     np.save(path+'/X_'+split+'.npy', imgs)
     np.save(path+'/Y_'+split+'.npy', labels)
+    """
     if split=='train':
         mean= np.mean(np.asarray(imgs), axis=0)
         np.save(path+'/mean.npy', mean)
 
-        weights= get_weights(2, labels)
+        weights= get_weights(3, labels)
         np.save(path+'/weights.npy', weights)
+    """
+    mean= np.mean(np.asarray(imgs), axis=0)
+    np.save(path+'/'+split+'_mean.npy', mean)
+
+    weights= get_weights(3, labels)
+    np.save(path+'/'+split+'_weights.npy', weights)
 
 def get_weights(nclasses, yy):
     label_to_frequency= {}
@@ -96,7 +103,8 @@ def parse_paths(args_):
 
     #shuffle(filename_pairs)
 
-    write_image_annotation_pairs(filename_pairs, args_.out, args_.pathfile.split('_')[0])
+    #write_image_annotation_pairs(filename_pairs, args_.out, args_.pathfile.split('_')[0])
+    write_image_annotation_pairs(filename_pairs, args_.out, args_.split)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -106,5 +114,7 @@ if __name__ == '__main__':
                         help='path to the dataset root')
     parser.add_argument("--out", default='vivid_darpa/',
                         help='name of output tfrecords file')
+    parser.add_argument("--split", default='train',
+                        help='split name of output tfrecords file')
     args = parser.parse_args()
     main(args)
