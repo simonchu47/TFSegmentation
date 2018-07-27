@@ -72,7 +72,8 @@ def decode_labels(mask, num_classes):
     #     exit(-1)
 
     # Check the length of the colours with num_classes
-    assert (num_classes == len(colours)), 'num_classes %d should be equal the number colours %d.' % (num_classes, len(colours))
+    #assert (num_classes == len(colours)), 'num_classes %d should be equal the number colours %d.' % (num_classes, len(colours))
+    assert (num_classes <= len(colours)), 'num_classes %d should be equal the number colours %d.' % (num_classes, len(colours))
     # Get the shape of the mask
     n, h, w = mask.shape
     # Create the output numpy array

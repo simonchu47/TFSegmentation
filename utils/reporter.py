@@ -61,6 +61,7 @@ class Reporter:
         self.report_dict['validation-total-mean-iou'][epoch] = mean_iou
         self.report_dict['validation-mean-iou']['road'][epoch] = str(per_class_mean_iou[0])
         self.report_dict['validation-mean-iou']['sidewalk'][epoch] = str(per_class_mean_iou[1])
+        """
         self.report_dict['validation-mean-iou']['building'][epoch] = str(per_class_mean_iou[2])
         self.report_dict['validation-mean-iou']['wall'][epoch] = str(per_class_mean_iou[3])
         self.report_dict['validation-mean-iou']['fence'][epoch] = str(per_class_mean_iou[4])
@@ -78,7 +79,7 @@ class Reporter:
         self.report_dict['validation-mean-iou']['train'][epoch] = str(per_class_mean_iou[16])
         self.report_dict['validation-mean-iou']['motorcycle'][epoch] = str(per_class_mean_iou[17])
         self.report_dict['validation-mean-iou']['bicycle'][epoch] = str(per_class_mean_iou[18])
-
+        """
 
 if __name__ == '__main__':
     class Empty():
