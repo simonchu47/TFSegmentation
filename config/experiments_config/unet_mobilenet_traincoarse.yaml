@@ -1,14 +1,15 @@
 # Directories arguments
 data_dir: "full_cityscapes_res"
-abs_data_dir: "/home/menna/projects/def-jag/menna/Cityscapes_Coarse/"
+#abs_data_dir: "/Users/simonchu/MyCourse/SelfDriving/TFSegmentation/data"
+abs_data_dir: "/Users/simonchu/MyCourse/SelfDriving/Challenge/Train/"
 exp_dir:  "unet_mobilenet"
 out_dir:  "unet_mobilenet"
 
 # Data arguments
-img_height:   512
-img_width:    1024
+img_height:   600
+img_width:    800
 num_channels: 3
-num_classes:  20
+num_classes:  3
 
 # Train arguments
 num_epochs: 200
