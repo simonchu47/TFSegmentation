@@ -176,7 +176,8 @@ class Train(BasicTrain):
         with tf.device('/cpu:0'):
             segdl = SegDataLoader(main_dir, batch_size, (resize_shape[0], resize_shape[1]), resize_shape,
                                   # * 2), resize_shape,
-                                  'data/cityscapes_tfdata/train.txt')
+                                  #'data/cityscapes_tfdata/train.txt')
+                                  'data/cityscapes_tfdata/lyft_train.txt')
             iterator = Iterator.from_structure(segdl.data_tr.output_types, segdl.data_tr.output_shapes)
             next_batch = iterator.get_next()
 
@@ -586,6 +587,9 @@ class Train(BasicTrain):
         #                print('Current learning rate is ', curr_lr)
 
         print("Training Finished")
+        print("Saving graph...")
+        # Save GraphDef
+        tf.train.write_graph(self.sess.graph_def,'.','graph.pb', as_text=False)
 
     def test_per_epoch(self, step, epoch):
         print("Validation at step:" + str(step) + " at epoch:" + str(epoch) + " ..")
