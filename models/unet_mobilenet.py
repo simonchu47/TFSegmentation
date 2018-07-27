@@ -44,9 +44,18 @@ class UNetMobileNet(BasicModel):
                                       num_filters=self.encoder.conv5_5.shape.as_list()[3], kernel_size=(1, 1),
                                       l2_strength=self.encoder.wd)
             self._debug(self.expand11)
+            
+            upscale1_shape = self.encoder.conv5_5.shape.as_list()
+            #upscale1_shape = tf.stack([batch_size, upscale1_shape[1], upscale1_shape[2], upscale1_shape[3]])
+            upscale1_shape[0] = tf.shape(self.encoder.conv5_5)[0]
+
+            #self.upscale1 = conv2d_transpose('upscale1', x=self.expand11,is_training= self.is_training,
+            #                                 output_shape=self.encoder.conv5_5.shape.as_list(), batchnorm_enabled=True,
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
             self.upscale1 = conv2d_transpose('upscale1', x=self.expand11,is_training= self.is_training,
-                                             output_shape=self.encoder.conv5_5.shape.as_list(), batchnorm_enabled=True,
+                                             output_shape=upscale1_shape, batchnorm_enabled=True,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             self._debug(self.upscale1)
             self.add1 = tf.add(self.upscale1, self.encoder.conv5_5)
             self._debug(self.add1)
@@ -60,9 +69,16 @@ class UNetMobileNet(BasicModel):
                                       num_filters=self.encoder.conv4_1.shape.as_list()[3], kernel_size=(1, 1),
                                       l2_strength=self.encoder.wd)
             self._debug(self.expand21)
+            
+            upscale2_shape = self.encoder.conv4_1.shape.as_list()
+            upscale2_shape[0] = tf.shape(self.encoder.conv4_1)[0]
+            #self.upscale2 = conv2d_transpose('upscale2', x=self.expand21,is_training= self.is_training,
+            #                                 output_shape=self.encoder.conv4_1.shape.as_list(),batchnorm_enabled=True,
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
             self.upscale2 = conv2d_transpose('upscale2', x=self.expand21,is_training= self.is_training,
-                                             output_shape=self.encoder.conv4_1.shape.as_list(),batchnorm_enabled=True,
+                                             output_shape=upscale2_shape,batchnorm_enabled=True,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             self._debug(self.upscale2)
             self.add2 = tf.add(self.upscale2, self.encoder.conv4_1)
             self._debug(self.add2)
@@ -76,8 +92,14 @@ class UNetMobileNet(BasicModel):
                                       num_filters=self.encoder.conv3_1.shape.as_list()[3], kernel_size=(1, 1),
                                       l2_strength=self.encoder.wd)
             self._debug(self.expand31)
+
+            upscale3_shape = self.encoder.conv3_1.shape.as_list()
+            upscale3_shape[0] = tf.shape(self.encoder.conv3_1)[0] 
+            #self.upscale3 = conv2d_transpose('upscale3', x=self.expand31, batchnorm_enabled=True,is_training= self.is_training,
+            #                                 output_shape=self.encoder.conv3_1.shape.as_list(),
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
             self.upscale3 = conv2d_transpose('upscale3', x=self.expand31, batchnorm_enabled=True,is_training= self.is_training,
-                                             output_shape=self.encoder.conv3_1.shape.as_list(),
+                                             output_shape=upscale3_shape,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
             self._debug(self.upscale3)
             self.add3 = tf.add(self.upscale3, self.encoder.conv3_1)
@@ -92,9 +114,16 @@ class UNetMobileNet(BasicModel):
                                       num_filters=self.encoder.conv2_1.shape.as_list()[3], kernel_size=(1, 1),
                                       l2_strength=self.encoder.wd)
             self._debug(self.expand41)
+
+            upscale4_shape = output_shape=self.encoder.conv2_1.shape.as_list()
+            upscale4_shape[0] = tf.shape(self.encoder.conv2_1)[0]
+            #self.upscale4 = conv2d_transpose('upscale4', x=self.expand41, batchnorm_enabled=True,is_training= self.is_training,
+            #                                 output_shape=self.encoder.conv2_1.shape.as_list(),
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
             self.upscale4 = conv2d_transpose('upscale4', x=self.expand41, batchnorm_enabled=True,is_training= self.is_training,
-                                             output_shape=self.encoder.conv2_1.shape.as_list(),
+                                             output_shape=upscale4_shape,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             self._debug(self.upscale4)
             self.add4 = tf.add(self.upscale4, self.encoder.conv2_1)
             self._debug(self.add4)
@@ -104,10 +133,16 @@ class UNetMobileNet(BasicModel):
             self._debug(self.expand42)
 
         with tf.name_scope('upscale_5'):
+            upscale5_shape = self.x_pl.shape.as_list()[0:3] + [self.encoder.conv2_1.shape.as_list()[3]]
+            upscale5_shape[0] = tf.shape(self.x_pl)[0]
+            #self.upscale5 = conv2d_transpose('upscale5', x=self.expand42, batchnorm_enabled=True,is_training= self.is_training,
+            #                                 output_shape=self.x_pl.shape.as_list()[0:3] + [
+            #                                     self.encoder.conv2_1.shape.as_list()[3]],
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
             self.upscale5 = conv2d_transpose('upscale5', x=self.expand42, batchnorm_enabled=True,is_training= self.is_training,
-                                             output_shape=self.x_pl.shape.as_list()[0:3] + [
-                                                 self.encoder.conv2_1.shape.as_list()[3]],
+                                             output_shape=upscale5_shape,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             self._debug(self.upscale5)
             self.expand5 = conv2d('expand5', x=self.upscale5, batchnorm_enabled=True,is_training= self.is_training,
                                       num_filters=self.encoder.conv1_1.shape.as_list()[3], kernel_size=(1, 1),dropout_keep_prob=0.5,

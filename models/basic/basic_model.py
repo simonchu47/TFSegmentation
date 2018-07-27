@@ -37,6 +37,7 @@ class BasicModel:
         self.params.num_channels = self.args.num_channels
         self.params.num_classes = self.args.num_classes
         self.params.class_weights = np.load(self.args.data_dir + 'weights.npy')
+        #self.params.class_weights = [1, 1, 1] #for test
         self.params.weighted_loss = self.args.weighted_loss
         # Input
         self.x_pl = None
@@ -105,14 +106,21 @@ class BasicModel:
 
     def init_input(self):
         with tf.name_scope('input'):
+            #self.x_pl = tf.placeholder(tf.float32,
+            #                           [self.args.batch_size, self.params.img_height, self.params.img_width, 3])
+            #self.y_pl = tf.placeholder(tf.int32, [self.args.batch_size, self.params.img_height, self.params.img_width])
             self.x_pl = tf.placeholder(tf.float32,
-                                       [self.args.batch_size, self.params.img_height, self.params.img_width, 3])
-            self.y_pl = tf.placeholder(tf.int32, [self.args.batch_size, self.params.img_height, self.params.img_width])
+                                       [None, self.params.img_height, self.params.img_width, 3])
+            self.y_pl = tf.placeholder(tf.int32, [None, self.params.img_height, self.params.img_width])
+
             #            self.curr_learning_rate= tf.placeholder(tf.float32)
 
             if self.params.weighted_loss:
                 self.wghts = np.zeros((self.args.batch_size, self.params.img_height, self.params.img_width),
                                       dtype=np.float32)
+                #self.wghts = np.zeros((None, self.params.img_height, self.params.img_width),
+                #                      dtype=np.float32)
+
             self.is_training = tf.placeholder(tf.bool)
 
     def init_network(self):
