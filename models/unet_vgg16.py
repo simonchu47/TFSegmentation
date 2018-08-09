@@ -59,9 +59,15 @@ class UNetVGG16(BasicModel):
 
         # Build Decoding part
         with tf.name_scope('upscale_1'):
+            #self.upscale1 = conv2d_transpose('upscale0', x=self.encoder.conv5_3,
+            #                                 output_shape=self.encoder.conv4_3.shape.as_list(),
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+            upscale1_shape = self.encoder.conv4_3.shape.as_list()
+            upscale1_shape[0] = tf.shape(self.encoder.conv4_3)[0]
             self.upscale1 = conv2d_transpose('upscale0', x=self.encoder.conv5_3,
-                                             output_shape=self.encoder.conv4_3.shape.as_list(),
+                                             output_shape=upscale1_shape,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             _debug(self.upscale1)
             self.concat1 = tf.add(self.upscale1, self.encoder.conv4_3)
             _debug(self.concat1)
@@ -74,9 +80,15 @@ class UNetVGG16(BasicModel):
                                    l2_strength=self.encoder.wd)
             _debug(self.expand12)
         with tf.name_scope('upscale_2'):
+            #self.upscale2 = conv2d_transpose('upscale2', x=self.expand12,
+            #                                 output_shape=self.encoder.conv3_3.shape.as_list(),
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+            upscale2_shape = self.encoder.conv3_3.shape.as_list()
+            upscale2_shape[0] = tf.shape(self.encoder.conv3_3)[0]
             self.upscale2 = conv2d_transpose('upscale2', x=self.expand12,
-                                             output_shape=self.encoder.conv3_3.shape.as_list(),
+                                             output_shape=upscale2_shape,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             _debug(self.upscale2)
             self.concat2 = tf.add(self.upscale2, self.encoder.conv3_3)
             _debug(self.concat2)
@@ -89,9 +101,15 @@ class UNetVGG16(BasicModel):
                                    l2_strength=self.encoder.wd)
             _debug(self.expand22)
         with tf.name_scope('upscale_3'):
+            #self.upscale3 = conv2d_transpose('upscale3', x=self.expand22,
+            #                                 output_shape=self.encoder.conv2_2.shape.as_list(),
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+            upscale3_shape = self.encoder.conv2_2.shape.as_list()
+            upscale3_shape[0] = tf.shape(self.encoder.conv2_2)[0]
             self.upscale3 = conv2d_transpose('upscale3', x=self.expand22,
-                                             output_shape=self.encoder.conv2_2.shape.as_list(),
+                                             output_shape=upscale3_shape,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             _debug(self.upscale3)
             self.concat3 = tf.add(self.upscale3, self.encoder.conv2_2)
             _debug(self.concat3)
@@ -104,9 +122,15 @@ class UNetVGG16(BasicModel):
                                    l2_strength=self.encoder.wd)
             _debug(self.expand32)
         with tf.name_scope('upscale_4'):
+            #self.upscale4 = conv2d_transpose('upscale4', x=self.expand32,
+            #                                 output_shape=self.encoder.conv1_2.shape.as_list(),
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+            upscale4_shape = self.encoder.conv1_2.shape.as_list()
+            upscale4_shape[0] = tf.shape(self.encoder.conv1_2)[0]
             self.upscale4 = conv2d_transpose('upscale4', x=self.expand32,
-                                             output_shape=self.encoder.conv1_2.shape.as_list(),
+                                             output_shape=upscale4_shape,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             _debug(self.upscale4)
             self.concat4 = tf.add(self.upscale4, self.encoder.conv1_2)
             _debug(self.concat4)
@@ -119,9 +143,15 @@ class UNetVGG16(BasicModel):
                                    l2_strength=self.encoder.wd)
             _debug(self.expand42)
         with tf.name_scope('upscale_5'):
+            #self.upscale5 = conv2d_transpose('upscale5', x=self.expand42,
+            #                                 output_shape=self.encoder.conv1_1.shape.as_list(),
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+            upscale5_shape = self.encoder.conv1_1.shape.as_list()
+            upscale5_shape[0] = tf.shape(self.encoder.conv1_1)[0]
             self.upscale5 = conv2d_transpose('upscale5', x=self.expand42,
-                                             output_shape=self.encoder.conv1_1.shape.as_list(),
+                                             output_shape=upscale5_shape,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             _debug(self.upscale5)
             self.concat5 = tf.add(self.upscale5, self.encoder.conv1_1)
             _debug(self.concat5)

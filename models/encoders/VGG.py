@@ -85,12 +85,14 @@ class VGG16:
         self.conv1_1 = load_conv_layer(preprocessed_input, 'conv1_1', self.pretrained_weights, l2_strength=self.wd)
         _debug(self.conv1_1)
         self.conv1_2 = load_conv_layer(self.conv1_1, 'conv1_2', self.pretrained_weights, pooling=True,
+        #self.conv1_2 = load_conv_layer(self.conv1_1, 'conv1_2', self.pretrained_weights, stride=(2, 2),
                                        l2_strength=self.wd)
         _debug(self.conv1_2)
 
         self.conv2_1 = load_conv_layer(self.conv1_2, 'conv2_1', self.pretrained_weights, l2_strength=self.wd)
         _debug(self.conv2_1)
         self.conv2_2 = load_conv_layer(self.conv2_1, 'conv2_2', self.pretrained_weights, pooling=True,
+        #self.conv2_2 = load_conv_layer(self.conv2_1, 'conv2_2', self.pretrained_weights, stride=(2, 2),
                                        l2_strength=self.wd)
         _debug(self.conv2_2)
 
@@ -99,6 +101,7 @@ class VGG16:
         self.conv3_2 = load_conv_layer(self.conv3_1, 'conv3_2', self.pretrained_weights, l2_strength=self.wd)
         _debug(self.conv3_2)
         self.conv3_3 = load_conv_layer(self.conv3_2, 'conv3_3', self.pretrained_weights, pooling=True,
+        #self.conv3_3 = load_conv_layer(self.conv3_2, 'conv3_3', self.pretrained_weights, stride=(2, 2),
                                        l2_strength=self.wd)
         _debug(self.conv3_3)
 
@@ -107,6 +110,7 @@ class VGG16:
         self.conv4_2 = load_conv_layer(self.conv4_1, 'conv4_2', self.pretrained_weights, l2_strength=self.wd)
         _debug(self.conv4_2)
         self.conv4_3 = load_conv_layer(self.conv4_2, 'conv4_3', self.pretrained_weights, pooling=True,
+        #self.conv4_3 = load_conv_layer(self.conv4_2, 'conv4_3', self.pretrained_weights, stride=(2, 2),
                                        l2_strength=self.wd)
         _debug(self.conv4_3)
 
@@ -115,6 +119,7 @@ class VGG16:
         self.conv5_2 = load_conv_layer(self.conv5_1, 'conv5_2', self.pretrained_weights, l2_strength=self.wd)
         _debug(self.conv5_2)
         self.conv5_3 = load_conv_layer(self.conv5_2, 'conv5_3', self.pretrained_weights, pooling=True,
+        #self.conv5_3 = load_conv_layer(self.conv5_2, 'conv5_3', self.pretrained_weights, stride=(2, 2),
                                        l2_strength=self.wd)
         _debug(self.conv5_3)
 

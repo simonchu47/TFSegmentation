@@ -11,7 +11,8 @@ def max_pool_2d(x, size=(2, 2), stride=(2, 2), name='pooling'):
     """
     size_x, size_y = size
     stride_x, stride_y = stride
-    return tf.nn.max_pool(x, ksize=[1, size_x, size_y, 1], strides=[1, stride_x, stride_y, 1], padding='VALID',
+    #return tf.nn.max_pool(x, ksize=[1, size_x, size_y, 1], strides=[1, stride_x, stride_y, 1], padding='VALID',
+    return tf.nn.max_pool(x, ksize=[1, size_x, size_y, 1], strides=[1, stride_x, stride_y, 1], padding='SAME',
                           name=name)
 
 
