@@ -53,10 +53,17 @@ class FCN8s(BasicModel):
         _debug(self.encoder.score_fr)
         # Build Decoding part
         with tf.name_scope('upscore_2s'):
+            #self.upscore2 = conv2d_transpose('upscore2', x=self.encoder.score_fr,
+            #                                 output_shape=self.encoder.feed1.shape.as_list()[0:3] + [
+            #                                     self.params.num_classes],
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+            upscore2_shape = self.encoder.feed1.shape.as_list()[0:3] + [
+                self.params.num_classes]
+            upscore2_shape[0] = tf.shape(self.encoder.feed1)[0]
             self.upscore2 = conv2d_transpose('upscore2', x=self.encoder.score_fr,
-                                             output_shape=self.encoder.feed1.shape.as_list()[0:3] + [
-                                                 self.params.num_classes],
+                                             output_shape=upscore2_shape,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             _debug(self.upscore2)
             self.score_feed1 = conv2d('score_feed1', x=self.encoder.feed1,
                                       num_filters=self.params.num_classes, kernel_size=(1, 1),
@@ -66,10 +73,17 @@ class FCN8s(BasicModel):
             _debug(self.fuse_feed1)
 
         with tf.name_scope('upscore_4s'):
+            #self.upscore4 = conv2d_transpose('upscore4', x=self.fuse_feed1,
+            #                                 output_shape=self.encoder.feed2.shape.as_list()[0:3] + [
+            #                                     self.params.num_classes],
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+            upscore4_shape = self.encoder.feed2.shape.as_list()[0:3] + [
+                self.params.num_classes]
+            upscore4_shape[0] = tf.shape(self.encoder.feed2)[0]
             self.upscore4 = conv2d_transpose('upscore4', x=self.fuse_feed1,
-                                             output_shape=self.encoder.feed2.shape.as_list()[0:3] + [
-                                                 self.params.num_classes],
+                                             output_shape=upscore4_shape,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             _debug(self.upscore4)
             self.score_feed2 = conv2d('score_feed2', x=self.encoder.feed2,
                                       num_filters=self.params.num_classes, kernel_size=(1, 1),
@@ -79,9 +93,15 @@ class FCN8s(BasicModel):
             _debug(self.fuse_feed2)
 
         with tf.name_scope('upscore_8s'):
+            #self.upscore8 = conv2d_transpose('upscore8', x=self.fuse_feed2,
+            #                                 output_shape=self.x_pl.shape.as_list()[0:3] + [self.params.num_classes],
+            #                                 kernel_size=(16, 16), stride=(8, 8), l2_strength=self.encoder.wd)
+            upscore8_shape = self.x_pl.shape.as_list()[0:3] + [self.params.num_classes]
+            upscore8_shape[0] = tf.shape(self.x_pl)[0]
             self.upscore8 = conv2d_transpose('upscore8', x=self.fuse_feed2,
-                                             output_shape=self.x_pl.shape.as_list()[0:3] + [self.params.num_classes],
+                                             output_shape=upscore8_shape,
                                              kernel_size=(16, 16), stride=(8, 8), l2_strength=self.encoder.wd)
+
             _debug(self.upscore8)
 
         self.logits = self.upscore8
