@@ -45,9 +45,15 @@ class UNetShuffleNet(BasicModel):
                                    num_filters=self.encoder.stage3.shape.as_list()[3], kernel_size=(1, 1),
                                    l2_strength=self.encoder.wd)
             self._debug(self.expand11)
+            #self.upscale1 = conv2d_transpose('upscale1', x=self.expand11, is_training=self.is_training,
+            #                                 output_shape=self.encoder.stage3.shape.as_list(), batchnorm_enabled=True,
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+            upscale1_shape = self.encoder.stage3.shape.as_list()
+            upscale1_shape[0] = tf.shape(self.encoder.stage3)[0]
             self.upscale1 = conv2d_transpose('upscale1', x=self.expand11, is_training=self.is_training,
-                                             output_shape=self.encoder.stage3.shape.as_list(), batchnorm_enabled=True,
+                                             output_shape=upscale1_shape, batchnorm_enabled=True,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             self._debug(self.upscale1)
             self.add1 = tf.add(self.upscale1, self.encoder.stage3)
             self._debug(self.add1)
@@ -61,9 +67,15 @@ class UNetShuffleNet(BasicModel):
                                    num_filters=self.encoder.stage2.shape.as_list()[3], kernel_size=(1, 1),
                                    l2_strength=self.encoder.wd)
             self._debug(self.expand21)
+            #self.upscale2 = conv2d_transpose('upscale2', x=self.expand21, is_training=self.is_training,
+            #                                 output_shape=self.encoder.stage2.shape.as_list(), batchnorm_enabled=True,
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+            upscale2_shape = self.encoder.stage2.shape.as_list()
+            upscale2_shape[0] = tf.shape(self.encoder.stage2)[0]
             self.upscale2 = conv2d_transpose('upscale2', x=self.expand21, is_training=self.is_training,
-                                             output_shape=self.encoder.stage2.shape.as_list(), batchnorm_enabled=True,
+                                             output_shape=upscale2_shape, batchnorm_enabled=True,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             self._debug(self.upscale2)
             self.add2 = tf.add(self.upscale2, self.encoder.stage2)
             self._debug(self.add2)
@@ -77,16 +89,27 @@ class UNetShuffleNet(BasicModel):
                                    num_filters=self.encoder.max_pool.shape.as_list()[3], kernel_size=(1, 1),
                                    l2_strength=self.encoder.wd)
             self._debug(self.expand31)
+            #self.upscale3 = conv2d_transpose('upscale3', x=self.expand31, batchnorm_enabled=True,
+            #                                 is_training=self.is_training,
+            #                                 output_shape=[self.encoder.max_pool.shape[0],
+            #                                               self.encoder.max_pool.shape.as_list()[1] + 1,
+            #                                               self.encoder.max_pool.shape.as_list()[2] + 1,
+            #                                               self.encoder.max_pool.shape.as_list()[3]],
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+            upscale3_shape = [self.encoder.max_pool.shape[0],
+                              self.encoder.max_pool.shape.as_list()[1],
+                              self.encoder.max_pool.shape.as_list()[2],
+                              self.encoder.max_pool.shape.as_list()[3]]
+            upscale3_shape[0] = tf.shape(self.encoder.max_pool)[0]
             self.upscale3 = conv2d_transpose('upscale3', x=self.expand31, batchnorm_enabled=True,
                                              is_training=self.is_training,
-                                             output_shape=[self.encoder.max_pool.shape[0],
-                                                           self.encoder.max_pool.shape.as_list()[1] + 1,
-                                                           self.encoder.max_pool.shape.as_list()[2] + 1,
-                                                           self.encoder.max_pool.shape.as_list()[3]],
+                                             output_shape=upscale3_shape,          
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             self._debug(self.upscale3)
-            padded = tf.pad(self.encoder.max_pool, [[0, 0], [0, 1], [0, 1], [0, 0]], "CONSTANT")
-            self.add3 = tf.add(self.upscale3, padded)
+            #padded = tf.pad(self.encoder.max_pool, [[0, 0], [0, 1], [0, 1], [0, 0]], "CONSTANT")
+            #self.add3 = tf.add(self.upscale3, padded)
+            self.add3 = tf.add(self.upscale3, self.encoder.max_pool)
             self._debug(self.add3)
             self.expand32 = conv2d('expand3_2', x=self.add3, batchnorm_enabled=True, is_training=self.is_training,
                                    num_filters=self.encoder.max_pool.shape.as_list()[3], kernel_size=(1, 1),
@@ -98,16 +121,27 @@ class UNetShuffleNet(BasicModel):
                                    num_filters=self.encoder.conv1.shape.as_list()[3], kernel_size=(1, 1),
                                    l2_strength=self.encoder.wd)
             self._debug(self.expand41)
+            #self.upscale4 = conv2d_transpose('upscale4', x=self.expand41, batchnorm_enabled=True,
+            #                                 is_training=self.is_training,
+            #                                 output_shape=[self.encoder.conv1.shape[0],
+            #                                               self.encoder.conv1.shape.as_list()[1] + 1,
+            #                                               self.encoder.conv1.shape.as_list()[2] + 1,
+            #                                               self.encoder.conv1.shape.as_list()[3]],
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+            upscale4_shape = [self.encoder.conv1.shape[0],
+                              self.encoder.conv1.shape.as_list()[1],
+                              self.encoder.conv1.shape.as_list()[2],
+                              self.encoder.conv1.shape.as_list()[3]]
+            upscale4_shape[0] = tf.shape(self.encoder.conv1)[0]
             self.upscale4 = conv2d_transpose('upscale4', x=self.expand41, batchnorm_enabled=True,
                                              is_training=self.is_training,
-                                             output_shape=[self.encoder.conv1.shape[0],
-                                                           self.encoder.conv1.shape.as_list()[1] + 1,
-                                                           self.encoder.conv1.shape.as_list()[2] + 1,
-                                                           self.encoder.conv1.shape.as_list()[3]],
+                                             output_shape=upscale4_shape,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             self._debug(self.upscale4)
-            padded2 = tf.pad(self.encoder.conv1, [[0, 0], [0, 1], [0, 1], [0, 0]], "CONSTANT")
-            self.add4 = tf.add(self.upscale4, padded2)
+            #padded2 = tf.pad(self.encoder.conv1, [[0, 0], [0, 1], [0, 1], [0, 0]], "CONSTANT")
+            #self.add4 = tf.add(self.upscale4, padded2)
+            self.add4 = tf.add(self.upscale4, self.encoder.conv1)
             self._debug(self.add4)
             self.expand42 = conv2d('expand4_2', x=self.add4, batchnorm_enabled=True, is_training=self.is_training,
                                    num_filters=self.encoder.conv1.shape.as_list()[3], kernel_size=(1, 1),
@@ -115,11 +149,21 @@ class UNetShuffleNet(BasicModel):
             self._debug(self.expand42)
 
         with tf.name_scope('upscale_5'):
+            print("x_pl shape is {}".format(self.x_pl.shape.as_list()[0:3]))
+            print("conv1 shape is {}".format(self.encoder.conv1.shape.as_list()[3]))
+            #self.upscale5 = conv2d_transpose('upscale5', x=self.expand42, batchnorm_enabled=True,
+            #                                 is_training=self.is_training,
+            #                                 output_shape=self.x_pl.shape.as_list()[0:3] + [
+            #                                     self.encoder.conv1.shape.as_list()[3]],
+            #                                 kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+            upscale5_shape = self.x_pl.shape.as_list()[0:3] + [
+                self.encoder.conv1.shape.as_list()[3]]
+            upscale5_shape[0] = tf.shape(self.x_pl)[0]
             self.upscale5 = conv2d_transpose('upscale5', x=self.expand42, batchnorm_enabled=True,
                                              is_training=self.is_training,
-                                             output_shape=self.x_pl.shape.as_list()[0:3] + [
-                                                 self.encoder.conv1.shape.as_list()[3]],
+                                             output_shape=upscale5_shape,
                                              kernel_size=(4, 4), stride=(2, 2), l2_strength=self.encoder.wd)
+
             self._debug(self.upscale5)
             self.expand5 = conv2d('expand5', x=self.upscale5, batchnorm_enabled=True, is_training=self.is_training,
                                   num_filters=self.encoder.conv1.shape.as_list()[3], kernel_size=(1, 1),

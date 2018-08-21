@@ -96,10 +96,13 @@ class ShuffleNet:
                                 kernel_size=(3, 3),
                                 stride=(2, 2), l2_strength=self.wd, bias=self.bias,
                                 batchnorm_enabled=self.batchnorm_enabled, is_training=self.train_flag,
-                                activation=tf.nn.relu, padding='VALID')
+                                #activation=tf.nn.relu, padding='VALID')
+                                activation=tf.nn.relu, padding='SAME')
+
             _debug(self.conv1)
-            padded = tf.pad(self.conv1, [[0, 0], [0, 1], [0, 1], [0, 0]], "CONSTANT")
-            self.max_pool = max_pool_2d(padded, size=(3, 3), stride=(2, 2), name='max_pool')
+            #padded = tf.pad(self.conv1, [[0, 0], [0, 1], [0, 1], [0, 0]], "CONSTANT")
+            #self.max_pool = max_pool_2d(padded, size=(3, 3), stride=(2, 2), name='max_pool')
+            self.max_pool = max_pool_2d(self.conv1, size=(3, 3), stride=(2, 2), name='max_pool')
             _debug(self.max_pool)
             self.stage2 = self.stage(self.max_pool, stage=2, repeat=3)
             _debug(self.stage2)
