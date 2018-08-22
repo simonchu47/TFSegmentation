@@ -1,16 +1,22 @@
 # Directories arguments
-data_dir: "full_cityscapes_res"
+#data_dir: "full_cityscapes_res"
+data_dir: "simple_lyft_data"
 exp_dir:  "dilationv2_shufflenet"
 out_dir:  "dilationv2_shufflenet"
 
 # Data arguments
-img_height:   512
-img_width:    1024
+#img_height:   512
+#img_width:    1024
+#num_channels: 3
+#num_classes:  20
+img_height:   600
+img_width:    800
 num_channels: 3
-num_classes:  20
+num_classes:  3
 
 # Train arguments
-num_epochs: 200
+#num_epochs: 200
+num_epochs: 2
 batch_size: 4
 shuffle: True
 data_mode: "experiment_v2"

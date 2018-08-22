@@ -50,9 +50,15 @@ class DilationShuffleNet(BasicModel):
                                         is_training=self.is_training )
             _debug(self.score_fr)
 
+            #self.upscore8 = conv2d_transpose('upscore8', x=self.score_fr,
+            #                                 output_shape=self.x_pl.shape.as_list()[0:3] + [self.params.num_classes],
+            #                                 kernel_size=(16, 16), stride=(8, 8), l2_strength=self.encoder.wd, is_training= self.is_training)
+            upscore8_shape = self.x_pl.shape.as_list()[0:3] + [self.params.num_classes]
+            upscore8_shape[0] = tf.shape(self.x_pl)[0]
             self.upscore8 = conv2d_transpose('upscore8', x=self.score_fr,
-                                             output_shape=self.x_pl.shape.as_list()[0:3] + [self.params.num_classes],
+                                             output_shape=upscore8_shape,
                                              kernel_size=(16, 16), stride=(8, 8), l2_strength=self.encoder.wd, is_training= self.is_training)
+
             _debug(self.upscore8)
 
         self.logits = self.upscore8
